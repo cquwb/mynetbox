@@ -23,6 +23,7 @@ int main() {
 	memset(&serv_addr, 0, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(65530);
+	//如果是ipv6的地址，请使用inet_pton方法.
 	inet_aton("127.0.0.1", &serv_addr.sin_addr);
 	
 	//connect 0 success, -1 fail
@@ -35,11 +36,12 @@ int main() {
 	std::string str;
 	char buf[BUF_SIZE];
 	while(std::cin >> str) {
+		//c_str 是返回一个兼容c的字符数组的对象，返回的其实是首地址的指针
 		send(client_fd, str.c_str(), str.size(), 0);
-		int nread = read(client_fd, buf, BUF_SIZE);
-		if (nread <= 0)
+		int nrecv = recv(client_fd, buf, BUF_SIZE, 0);
+		if (nrecv <= 0)
 			break;
-		buf[nread] = '\0';
+		buf[nrecv] = '\0';
 		std::cout << buf << std::endl;
 	}
 

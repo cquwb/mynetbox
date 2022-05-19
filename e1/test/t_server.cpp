@@ -19,10 +19,12 @@ int main() {
 	 * 
 	 */
 	int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (listen_fd == 1) {
+	if (listen_fd == -1) {
+		//作为系统调用后的报错信息，会自动把最新的一个系统调用的错误放在自定义的语句后面
 		perror("socket error");
 		exit(1);
 	}
+
 	std::cout << listen_fd << std::endl;
 
 	/*
@@ -45,7 +47,7 @@ int main() {
 	//ipv4
 	//inet_aton("127.0.0.1", &addr.sin_addr);
 
-	//bind 成功返回0，失败返回-1
+	//bind 成功返回0，失败返回-1, 错误码放在errno里
 	if (bind(listen_fd, (struct sockaddr *) &serv_addr,  sizeof(serv_addr)) == -1) {
 		perror("bind error");
 		exit(1);
@@ -64,6 +66,7 @@ int main() {
 		struct sockaddr_in cli_addr;
 		socklen_t len = sizeof(cli_addr);
 		//成功返回一个非负的整数，代表文件描述符(0 也是正确的)，失败返回-1
+		//这里第三个参数是长度的地址 有点奇怪
 		int conn_fd = accept(listen_fd, (struct sockaddr *) &cli_addr, &len);
 		if (conn_fd == -1) {
 			perror("accept error");
@@ -72,11 +75,15 @@ int main() {
 		//放到外面
 		char buf[1024];
 		while (1) {
-			int nread = read(conn_fd, buf, 1024);
-			if (nread <= 0) {
+			//这里应该用recv方法，recv和send是一对。read和write是一对
+			//recv和send是专门给socket对象用的。read和write是所有的文件描述符都可以
+			//所以recv和send可以单独设置一些flag来进行一些定制化的需求
+			//本身不带flag的recv和read可以视为相同，一种特殊的情况有些不一样 可以查看手册
+			int nrecv = recv(conn_fd, buf, 1024, 0);
+			if (nrecv <= 0) {
 				break;
 			}
-			send(conn_fd, buf, nread, 0);
+			send(conn_fd, buf, nrecv, 0);
 		}
 		//不要忘了close
 		close(conn_fd);
