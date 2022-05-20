@@ -1,0 +1,19 @@
+# 1 "b.cpp"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "b.cpp"
+# 1 "a.h" 1
+
+
+extern int a;
+void f();
+
+class MyA {
+ private:
+  int num;
+};
+# 2 "b.cpp" 2
+
+int b = 200;
