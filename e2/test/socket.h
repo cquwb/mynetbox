@@ -17,6 +17,7 @@ class Socket {
 		int Listen(int backlog);
 		int Accept(IPv4 *addr);
 		int GetFd() {return fd_;}
+		int Connect(IPv4 *addr);
 	private:
 		int fd_;
 

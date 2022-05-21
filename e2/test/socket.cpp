@@ -22,3 +22,11 @@ int Socket::Accept(IPv4 *addr) {
 	//这个地方需要的不是const sockaddr, 是可以修改的
 	return accept(fd_, addr->GetSockAddrPtr(), addr->GetLenAddr());
 }
+
+
+//要inlcude address.h
+int Socket::Connect(IPv4 *addr) {
+	return connect(fd_, addr->GetSockAddrPtr(), addr->GetSocklen());
+
+}
+
