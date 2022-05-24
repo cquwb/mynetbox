@@ -15,16 +15,10 @@
 int main() {
 	std::cout << "Begin tcp server" << std::endl;
 
-	IPv4 addr(65530, "127.0.0.1");
+	IPv4 addr(65530);
 	Socket sock(AF_INET, SOCK_STREAM, 0);
-	if (-1 == sock.Bind(&addr)) {
-		perror("socket bind error");
-		exit(1);
-	}
-	if (-1 == sock.Listen(3)) {
-		perror("socket listen error");
-		exit(1);
-	}
+	sock.BindOrDie(addr);
+	sock.ListenOrDie(3);
 	
 	//怎么定义一个数组struct
 	int max_conn = 3;
@@ -73,7 +67,11 @@ int main() {
 				if ((fds[i].revents & POLLRDNORM) != 0) {		
 					int nrecv = recv(fds[i].fd, buf, 1024, 0);
 					if (nrecv <= 0) {
-						continue;
+						std::cout << "close conn_fd = " << fds[i].fd << std::endl;
+						//如果不主动关闭这个close，poll会一直有这个消息
+						close(fds[i].fd);
+						fds[i].fd = -1;
+						//continue;
 					}
 					send(fds[i].fd, buf, nrecv, 0);
 				}

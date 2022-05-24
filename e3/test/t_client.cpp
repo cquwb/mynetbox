@@ -1,6 +1,4 @@
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -22,7 +20,7 @@ int main() {
 		exit(1);
 	}
 
-	IPv4 addr(65530, "127.0.0.1");
+	IPv4 addr("127.0.0.1", 65530);
 
 	if (-1 == sock.Connect(&addr)) {
 		perror("连接失败");
