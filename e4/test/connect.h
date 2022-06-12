@@ -13,7 +13,7 @@ namespace MyCpp {
 			public:
 				void OnReadMsg();
 			public:
-				Connect(int fd, PollLoop& p):mFd(fd) {
+				Connect(int fd, PollLoop& p):mFd(fd), mLoop(p) {
 
 					std::cout << "[Connect.h] construct fd " << fd <<std::endl;
 
@@ -30,6 +30,7 @@ namespace MyCpp {
 
 			private:
 				int mFd;
+				PollLoop& mLoop;
 
 		};
 	}

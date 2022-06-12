@@ -18,6 +18,7 @@ namespace MyCpp {
 										//
 
 				void RegisterHandler(PollEventHandler const &h);
+				void UnRegisterHandler(int fd);
 				
 			private:
 				// m_fds相当于是一个触发的事件列表，这些事情是有操作系统触发的。这里只是需要我们

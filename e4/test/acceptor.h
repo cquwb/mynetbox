@@ -5,6 +5,7 @@
 #include <functional>
 #include "pollLoop.h"
 #include "socket.h"
+#include "connect.h"
 
 //accept初始化的时候就应该注册事件的处理函数
 namespace MyCpp {
@@ -35,6 +36,7 @@ namespace MyCpp {
 			private:
 				Socket mSocket;
 				PollLoop& mLoop;
+				std::vector<Connect> mConnects;
 
 		};
 	

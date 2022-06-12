@@ -38,6 +38,16 @@ namespace MyCpp {
 			m_handlers.push_back(h);
 			std::cout << "[Poolloop] end push" << std::endl;
 		}
+
+		void PollLoop::UnRegisterHandler(int fd) {
+			for(int i = 0; i < m_fds.size();i++) {
+				if (m_fds[i].fd == fd) {
+					m_fds[i].fd = -1;
+					break;
+				}
+			}
+		
+		}
 	}
 }
 
