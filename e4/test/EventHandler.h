@@ -40,6 +40,8 @@ namespace MyCpp {
 
 				void DisableAll() { mPollFd.events = 0; }
 
+				int GetLoopIdx() { return mLoopIdx; }
+
 				/// 提供一个获取原始的
 				int GetFd() const {
 					return mPollFd.fd;

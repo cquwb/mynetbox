@@ -13,7 +13,7 @@ namespace MyCpp {
 			int conn_fd = mSocket.Accept(&addr);
 			std::cout << "get conn fd" << conn_fd << std::endl;
 			//这个conn_fd 应该也注册到pool里
-			Connect* connectPtr = new Connect(conn_fd, mLoop);
+			Connect* connectPtr = new Connect(conn_fd, mLoopPtr);
 			//为了让connect不销毁
 			//mConnects.push_back(connectPtr);
 

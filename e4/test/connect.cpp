@@ -22,7 +22,7 @@ namespace MyCpp {
 				//如果不主动关闭这个close，poll会一直有这个消息
 				close(mFd);
 				//这里还需要特殊处理 从pollLoop里把这一行的数据的fd改成-1，不然一直都有事件触发
-				mLoop.UnRegisterHandler(mFd);
+				mLoopPtr->UnRegisterHandler(mHandler);
 			} else {
 				send(mFd, buf, nrecv, 0);
 			}

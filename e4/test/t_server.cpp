@@ -14,10 +14,10 @@
 int main() {
 	//错误的写法
 	//MyCpp::Net::PollLoop poll(); //调用的时候要加上命名空间
-	MyCpp::Net::PollLoop poll; //调用的时候要加上命名空间
+	MyCpp::Net::PollLoopPtr poll(new MyCpp::Net::PollLoop); //调用的时候要加上命名空间
 	MyCpp::Net::Acceptor accept(65530, 3, poll);
 	while(1) {
-		poll.Loop(2000);
+		poll->Loop(2000);
 	}
 	return 0;
 }

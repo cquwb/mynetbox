@@ -12,7 +12,7 @@ namespace MyCpp {
 	namespace Net {
 		class Acceptor {
 			public:
-				Acceptor(int port, int max_conn, PollLoop& p):mSocket(AF_INET, SOCK_STREAM, 0), mLoop(p) {
+				Acceptor(int port, int max_conn, PollLoopPtr& p):mSocket(AF_INET, SOCK_STREAM, 0), mLoopPtr(p) {
 					IPv4 addr(port);
 
 					mSocket.BindOrDie(addr);
@@ -26,7 +26,7 @@ namespace MyCpp {
 					ptr->EnableRead(true);	
 					ptr->SetReadCallBk(std::bind(&Acceptor::OnReadMsg, this));
 					std::cout << "begin ResigerHandler" << std::endl;
-					p.RegisterHandler(ptr);
+					p->RegisterHandler(ptr);
 
 				}
 
@@ -35,7 +35,7 @@ namespace MyCpp {
 
 			private:
 				Socket mSocket;
-				PollLoop& mLoop;
+				PollLoopPtr& mLoopPtr;
 				std::vector<Connect> mConnects;
 
 		};

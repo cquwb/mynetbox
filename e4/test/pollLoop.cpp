@@ -4,7 +4,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-
+#include <cassert>
 
 #include "pollLoop.h"
 #include "EventHandler.h"
@@ -30,24 +30,46 @@ namespace MyCpp {
 
 		}
 
-		void PollLoop::RegisterHandler(PollEventHandlerPtr const & h) {
-			//// const变量这个里面不能调用他的函数 如果要调用 这个函数必须是const
-			std::cout << "[Poolloop] Begin RegisterHandler" << std::endl;
-			m_fds.push_back(h->GetPollFd());
-			std::cout << "[Poolloop] Begin push" << std::endl;
-			/// 因为改成了不能拷贝，所以这里push 原始指针是不行了
-			m_handlers.push_back(h);
-			std::cout << "[Poolloop] end push" << std::endl;
+		/// 返回值返回最新的index
+		int PollLoop::RegisterHandler(PollEventHandlerPtr const & h) {
+			//里面没有剩余的空间了
+			if (mIdleIdx.empty()) {
+				//// const变量这个里面不能调用他的函数 如果要调用 这个函数必须是const
+				m_fds.push_back(h->GetPollFd());
+				/// 因为改成了不能拷贝，所以这里push 原始指针是不行了
+				m_handlers.push_back(h);
+				return (m_fds.size()-1);
+			} else {
+				int idx = mIdleIdx.back();
+				mIdleIdx.pop_back();
+
+				m_fds[idx] = h->GetPollFd();
+				m_handlers[idx]=h;
+				return idx;
+			
+			}
 		}
 
-		void PollLoop::UnRegisterHandler(int fd) {
-			for(int i = 0; i < m_fds.size();i++) {
-				if (m_fds[i].fd == fd) {
-					m_fds[i].fd = -1;
-					break;
-				}
-			}
-		
+		void PollLoop::UnRegisterHandler(PollEventHandlerPtr const & h) {
+		int idx = h->GetLoopIdx();
+
+		assert(idx >= 0);
+		assert(h->GetFd() == m_fds[idx].fd);
+		m_fds[idx].fd = -1;
+		m_fds[idx].events = 0;
+		m_fds[idx].revents = 0;
+
+		/// 减少引用
+		m_handlers[idx].reset();
+
+		mIdleIdx.push_back(idx);
+
+		}
+
+
+		/// 为什么这边是常量，但是可以修改他们的值呢？???
+		void ApplyHandlerOnLoop(PollEventHandlerPtr const &h, PollLoopPtr const & p) {
+			h->mLoopIdx = p->RegisterHandler(h);
 		}
 	}
 }

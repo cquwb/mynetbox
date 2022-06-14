@@ -13,7 +13,7 @@ namespace MyCpp {
 			public:
 				void OnReadMsg();
 			public:
-				Connect(int fd, PollLoop& p):mFd(fd), mLoop(p) {
+				Connect(int fd, PollLoopPtr& p):mFd(fd), mLoopPtr(p) {
 
 					std::cout << "[Connect.h] construct fd " << fd <<std::endl;
 
@@ -23,14 +23,18 @@ namespace MyCpp {
 					PollEventHandlerPtr ptr(new PollEventHandler(mFd)); 
 					ptr->EnableRead(true);	
 					ptr->SetReadCallBk(std::bind(&Connect::OnReadMsg, this));
-					p.RegisterHandler(ptr);
+					mHandler = ptr;
+					ApplyHandlerOnLoop(ptr, p);
 
 				}
 
 
 			private:
 				int mFd;
-				PollLoop& mLoop;
+				/// 这里是否一定要用引用？
+				/// 不一定要用引用，如果用引用的话，那么在头文件里的connect里必须要能够初始化，因为引用必须立马初始化
+				PollEventHandlerPtr mHandler;
+				PollLoopPtr & mLoopPtr;
 
 		};
 	}
