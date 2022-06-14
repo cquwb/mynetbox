@@ -23,18 +23,19 @@ namespace MyCpp {
 						continue;
 					}
 					//这边要求传入的不是fd 而是pollfd
-					m_handlers[j].HandlerEvents(m_fds[j]);
+					m_handlers[j]->HandlerEvents(m_fds[j]);
 				}
 
 			}
 
 		}
 
-		void PollLoop::RegisterHandler(PollEventHandler const & h) {
+		void PollLoop::RegisterHandler(PollEventHandlerPtr const & h) {
 			//// const变量这个里面不能调用他的函数 如果要调用 这个函数必须是const
 			std::cout << "[Poolloop] Begin RegisterHandler" << std::endl;
-			m_fds.push_back(h.GetFd());
+			m_fds.push_back(h->GetPollFd());
 			std::cout << "[Poolloop] Begin push" << std::endl;
+			/// 因为改成了不能拷贝，所以这里push 原始指针是不行了
 			m_handlers.push_back(h);
 			std::cout << "[Poolloop] end push" << std::endl;
 		}

@@ -20,11 +20,11 @@ namespace MyCpp {
 
 				
 					//这里可以不用new 因为在Push的时候发生了拷贝构造
-					PollEventHandler ptr(mSocket.GetFd());
+					PollEventHandlerPtr ptr(new PollEventHandler(mSocket.GetFd())); 
 					///// 这里需要一个取地址的符号
 					///// 没有调用这个函数，连接进来的事件也不会触发
-					ptr.SetRead(true);	
-					ptr.SetEventCallBk(std::bind(&Acceptor::OnReadMsg, this));
+					ptr->EnableRead(true);	
+					ptr->SetReadCallBk(std::bind(&Acceptor::OnReadMsg, this));
 					std::cout << "begin ResigerHandler" << std::endl;
 					p.RegisterHandler(ptr);
 

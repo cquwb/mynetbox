@@ -20,9 +20,9 @@ namespace MyCpp {
 					//这里可以不用new 因为在Push的时候发生了拷贝构造
 					/////// 因为这里写错了fd, 导致读取到的数据一直是错乱的
 					//PollEventHandler ptr(fd);
-					PollEventHandler ptr(mFd);
-					ptr.SetRead(true);	
-					ptr.SetEventCallBk(std::bind(&Connect::OnReadMsg, this));
+					PollEventHandlerPtr ptr(new PollEventHandler(mFd)); 
+					ptr->EnableRead(true);	
+					ptr->SetReadCallBk(std::bind(&Connect::OnReadMsg, this));
 					p.RegisterHandler(ptr);
 
 				}
