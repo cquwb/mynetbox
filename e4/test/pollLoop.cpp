@@ -53,6 +53,7 @@ namespace MyCpp {
 		void PollLoop::UnRegisterHandler(PollEventHandlerPtr const & h) {
 		int idx = h->GetLoopIdx();
 
+		/// 这个assert 还是能发现一些问题的 idx一开始没有复制，yo组合格信息更方便发现问题
 		assert(idx >= 0);
 		assert(h->GetFd() == m_fds[idx].fd);
 		m_fds[idx].fd = -1;

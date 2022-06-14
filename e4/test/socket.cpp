@@ -24,7 +24,7 @@ void Socket::ListenOrDie(int backlog) {
 	}
 }
 
-int Socket::Accept(IPv4 *peer) {
+int Socket::Accept(IPv4Ptr peer) {
 	struct sockaddr_in addr;
 	socklen_t len = sizeof(addr);
 	int fd = accept(fd_, (struct sockaddr *)&addr, &len);

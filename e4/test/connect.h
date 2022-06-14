@@ -5,6 +5,7 @@
 #include <functional>
 #include "pollLoop.h"
 #include "socket.h"
+#include <memory>
 
 //accept初始化的时候就应该注册事件的处理函数
 namespace MyCpp {
@@ -28,6 +29,9 @@ namespace MyCpp {
 
 				}
 
+				Connect(const Connect&) = delete;
+				Connect operator=(const Connect&) = delete;
+
 
 			private:
 				int mFd;
@@ -37,6 +41,8 @@ namespace MyCpp {
 				PollLoopPtr & mLoopPtr;
 
 		};
+
+		typedef std::shared_ptr<Connect> ConnectPtr;
 	}
 }
 

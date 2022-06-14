@@ -21,7 +21,7 @@ class Socket {
 		void ListenOrDie(int backlog);
 
 		//这里按道理也是可以用引用的
-		int Accept(IPv4 *addr);
+		int Accept(IPv4Ptr peer);
 		int GetFd() const {return fd_;}
 		int Connect(IPv4 *addr);
 	private:

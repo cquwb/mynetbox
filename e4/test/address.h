@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string>
+#include <memory>
 
 class IPv4 {
 	public:
@@ -36,5 +37,6 @@ class IPv4 {
 		//需要引入include<netinet/in.h>
 		struct sockaddr_in mSockAddr;
 };
+typedef std::shared_ptr<IPv4> IPv4Ptr;
 #endif
 
