@@ -10,6 +10,17 @@
 //accept初始化的时候就应该注册事件的处理函数
 namespace MyCpp {
 	namespace Net {
+		class Connect;
+		typedef std::shared_ptr<Connect> ConnectPtr;
+		typedef std::vector<char> RawMsg;
+		typedef std::shared_ptr<RawMsg> RawMsgPtr;
+		typedef std::shared_ptr<const RawMsg> RawMsgConstPtr;
+
+		typedef std::function<void()> EventCallBk;
+		typedef std::function<void()> CloseCallBk;
+		typedef std::function<void(RawMsgPtr const &)> ConnectRecvRawCallBk;
+
+
 		class Connect {
 			public:
 				void OnReadMsg();
@@ -32,6 +43,12 @@ namespace MyCpp {
 				Connect(const Connect&) = delete;
 				Connect operator=(const Connect&) = delete;
 
+				void SetRecvRawCallBk(ConnectRecvRawCallBk cb) {
+					mRecvRawCallBk = std::move(cb);
+				}
+
+			void SendRawData(char const * buf, int num);
+
 
 			private:
 				int mFd;
@@ -39,10 +56,13 @@ namespace MyCpp {
 				/// 不一定要用引用，如果用引用的话，那么在头文件里的connect里必须要能够初始化，因为引用必须立马初始化
 				PollEventHandlerPtr mHandler;
 				PollLoopPtr & mLoopPtr;
+				/// 保证这个数据也是在堆上的，收到了数据先保存起来
+				char mReadBuff[1024];
+				ConnectRecvRawCallBk mRecvRawCallBk;
+				CloseCallBk mCloseCallBk;
 
 		};
 
-		typedef std::shared_ptr<Connect> ConnectPtr;
 	}
 }
 

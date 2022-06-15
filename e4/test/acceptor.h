@@ -11,6 +11,7 @@
 namespace MyCpp {
 	namespace Net {
 		typedef std::function<void(int, IPv4Ptr const &)> NewConnCallBk;
+		typedef std::function<void(ConnectPtr const &, RawMsgPtr const &)> RecvRawCallBk;
 
 		class Acceptor {
 			public:
@@ -37,6 +38,10 @@ namespace MyCpp {
 
 				void SetNewConnCallBk(NewConnCallBk cb) {mNewConnCallBk =std::move(cb);}
 
+				void SetRecvRawCallBk(RecvRawCallBk cb) {
+					mRecvRawCallBk = std::move(cb);
+				}
+
 
 			private:
 				Socket mSocket;
@@ -46,6 +51,7 @@ namespace MyCpp {
 				PollEventHandlerPtr mHandlerPtr;
 				/// 添加可自定义的回调函数。方便做自定义的修改
 				NewConnCallBk mNewConnCallBk;
+				RecvRawCallBk mRecvRawCallBk;
 
 		};
 	

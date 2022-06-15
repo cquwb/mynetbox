@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <functional>
 #include "socket.h"
 #include "address.h"
 #include "acceptor.h"
@@ -14,6 +15,7 @@ namespace MyCpp {
 			std::cout << "get conn fd" << conn_fd << std::endl;
 			//这个conn_fd 应该也注册到pool里
 			ConnectPtr connectPtr(new Connect(conn_fd, mLoopPtr));
+			connectPtr->SetRecvRawCallBk(std::bind(mRecvRawCallBk, connectPtr, std::placeholders::_1));
 			mConnects.push_back(connectPtr);
 			if (mNewConnCallBk) {
 				mNewConnCallBk(conn_fd, pear_addr);

@@ -6,3 +6,5 @@
 3. PollLoop修改总结
 - 为什么使用友元函数，就是为了不在loop类的register里面既做register也做修改handler.loopIdx的操作。
 - handler本身也不能对外提供public的setidx的方法。
+4. Connect修改总结
+- std::bin的目的就是为了给一个参数的函数绑定一个需要两个参数的函数，缺的那一个在Bind的时候固定上.减少父对象需要反复传递的问题
