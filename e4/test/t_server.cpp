@@ -6,8 +6,7 @@
 
 #include "pollLoop.h"
 ///// 如果不include出来下面会报 ‘Acceptor’ is not a member of ‘MyCpp::Net’
-#include "acceptor.h"
-#include "address.h"
+#include "TcpServer.h"
 #include "connect.h"
 
 #include <iostream>
@@ -29,9 +28,9 @@ int main() {
 	//错误的写法
 	//MyCpp::Net::PollLoop poll(); //调用的时候要加上命名空间
 	MyCpp::Net::PollLoopPtr poll(new MyCpp::Net::PollLoop); //调用的时候要加上命名空间
-	MyCpp::Net::Acceptor accept(65530, 3, poll);
-	accept.SetNewConnCallBk(std::bind(OnNewConnCallBk, _1, _2));
-	accept.SetRecvRawCallBk(std::bind(OnRecvRawMsg, _1, _2));
+	MyCpp::Net::TcpServer server(65530, 3, poll);
+	server.SetNewConnCallBk(std::bind(OnNewConnCallBk, _1, _2));
+	server.SetRecvRawCallBk(std::bind(OnRecvRawMsg, _1, _2));
 	while(1) {
 		poll->Loop(2000);
 	}

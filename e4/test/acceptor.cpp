@@ -10,17 +10,12 @@
 namespace MyCpp {
 	namespace Net {
 		void Acceptor::OnReadMsg() {
+					std::cout << "[Acceptor] begin onReadMsg" << std::endl;
 			IPv4Ptr pear_addr = IPv4Ptr(new IPv4);
 			int conn_fd = mSocket.Accept(pear_addr);
-			std::cout << "get conn fd" << conn_fd << std::endl;
-			//这个conn_fd 应该也注册到pool里
-			ConnectPtr connectPtr(new Connect(conn_fd, mLoopPtr));
-			connectPtr->SetRecvRawCallBk(std::bind(mRecvRawCallBk, connectPtr, std::placeholders::_1));
-			mConnects.push_back(connectPtr);
-			if (mNewConnCallBk) {
-				mNewConnCallBk(conn_fd, pear_addr);
+			if (mNewConn) {
+				mNewConn(conn_fd, pear_addr);
 			}
-
 		}
 	}
 }

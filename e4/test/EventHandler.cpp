@@ -13,7 +13,8 @@ namespace MyCpp {
 		}
 		void PollEventHandler::HandlerEvents(struct pollfd const & pollFd) {
 		
-			std::cout << "[PoolEventHandler] HandlerEvents, fd:" << pollFd.fd  << " revents:" << pollFd.revents << std::endl;
+			std::cout << "[PoolEventHandler] HandlerEvents, fd:" << pollFd.fd  << " events:" << pollFd.events << " revents:" << pollFd.revents << std::endl;
+			std::cout << "PoLLIN:" << POLLIN << ",POLLERRPR"<< POLLERR << ",pollhup" << POLLHUP << ", POLLNVAL" << POLLNVAL << std::endl;
 			assert(mPollFd.fd == pollFd.fd);
 			assert(mPollFd.events == pollFd.events);
 			

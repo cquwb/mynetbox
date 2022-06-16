@@ -8,6 +8,7 @@
 
 #include "pollLoop.h"
 #include "EventHandler.h"
+#include <iostream>
 
 
 //实现的地方也要加上命名空间
@@ -16,6 +17,7 @@ namespace MyCpp {
 		//实现的地方也要加上返回类型
 		void PollLoop::Loop(int timeout) {
 			int n = poll(m_fds.data(), m_fds.size(), timeout);			
+			std::cout << "[PollLpp] get n " << n <<" events "<<std::endl;
 			if (n > 0) {
 				int j;
 				for (j = 0; j < m_fds.size(); j++) {
@@ -23,6 +25,7 @@ namespace MyCpp {
 						continue;
 					}
 					//这边要求传入的不是fd 而是pollfd
+			std::cout << "[PollLpp] event fd " << m_fds[j].fd <<std::endl;
 					m_handlers[j]->HandlerEvents(m_fds[j]);
 				}
 
